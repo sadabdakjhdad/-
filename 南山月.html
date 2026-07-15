@@ -1,0 +1,393 @@
+07.15 13:47
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>南山月</title>
+    <HTA:APPLICATION
+        ID="app"
+        APPLICATIONNAME="南山月"
+        WINDOWSTATE="normal"
+        BORDER="normal"
+        INNERBORDER="no"
+        CAPTION="yes"
+        SYSMENU="yes"
+        SINGLEINSTANCE="yes"
+        RESIZE="yes"
+    >
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: "微软雅黑", sans-serif;
+            background: #f0f4f8;
+            overflow-y: auto;
+            overflow-x: hidden;
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        body::-webkit-scrollbar { display: none; }
+        .card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            max-width: 500px;
+            margin: 20px auto;
+            padding: 20px;
+            text-align: center;
+        }
+        h2 { margin: 0 0 15px; font-size: 22px; }
+        .input-group { margin: 10px 0; }
+        label {
+            display: block;
+            text-align: left;
+            font-weight: bold;
+            font-size: 14px;
+            margin-bottom: 2px;
+            padding-left: 10px;
+        }
+        .hint {
+            display: block;
+            text-align: left;
+            font-size: 14px;
+            color: #777;
+            margin-bottom: 6px;
+            padding-left: 0px;
+        }
+        .combo-box {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 80%;
+            max-width: 300px;
+            margin: 0 auto;
+        }
+        .combo-box input {
+            flex: 1;
+            padding: 8px;
+            font-size: 15px;
+            border: 1px solid #aaa;
+            border-radius: 6px 0 0 6px;
+            text-align: center;
+            border-right: none;
+        }
+        .combo-box select {
+            width: auto;            /* 让下拉箭头宽度自适应 */
+            padding: 8px 10px;
+            font-size: 15px;
+            border: 1px solid #aaa;
+            border-radius: 0 6px 6px 0;
+            background: #f8f8f8;
+            cursor: pointer;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+        }
+        .combo-box select::-ms-expand { display: none; }
+        .button-row { margin: 18px 0 10px; }
+        button {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 18px;
+            font-size: 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin: 0 6px;
+            font-weight: bold;
+        }
+        button:hover { background: #45a049; }
+        .copy-btn {
+            background: #2196F3;
+            display: none;
+        }
+        .copy-btn:hover { background: #1976D2; }
+        .main-result {
+            text-align: left;
+            font-size: 16px;
+            line-height: 2.0;
+            color: #000;
+            margin: 12px 0;
+            padding-left: 10px;
+        }
+        .main-result b { color: #000; font-weight: bold; }
+        hr {
+            border: none;
+            border-top: 1px solid #ddd;
+            margin: 12px 0;
+        }
+        .steps {
+            text-align: left;
+            font-size: 15px;
+            color: #555;
+            line-height: 1.8;
+            padding-left: 10px;
+            margin: 10px 0;
+        }
+        .bill-table {
+            background: #fefefe;
+            border: 2px dashed #ddd;
+            border-radius: 12px;
+            padding: 20px 15px;
+            margin: 15px 0;
+            font-size: 15px;
+            line-height: 2.0;
+            color: #333;
+            word-break: break-word;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h2> 南山月</h2>
+        <!-- 单子类型 -->
+        <div class="input-group">
+            <label>单子类型：</label>
+            <div class="combo-box">
+                <input type="text" id="orderTypeInput" placeholder="输入或选择类型" value="" oninput="handleCustomInput()">
+                <select id="orderTypeSelect" onchange="handleSelectChange()">
+                    <option value="">选择类型</option>
+                    <option value="甜蜜单">甜蜜单</option>
+                    <option value="加页娱乐">加页娱乐</option>
+                    <option value="加页代打">加页代打</option>
+                    <option value="加页代肝">加页代肝</option>
+                    <option value="匹配娱乐">匹配娱乐</option>
+                    <option value="排位代打">排位代打</option>
+                    <option value="排位低保">排位低保</option>
+                    <option value="单练">单练</option>
+                    <option value="联合娱乐">联合娱乐</option>
+                    <option value="联合代打">联合代打</option>
+                    <option value="联合代肝">联合代肝</option>
+                    <option value="五排排位">五排排位</option>
+                    <option value="五排低保">五排低保</option>
+                </select>
+            </div>
+        </div>
+        <!-- 时长（直接写死所有选项） -->
+        <div class="input-group">
+            <label>时长：</label>
+            <div class="combo-box">
+                <input type="text" id="durationInput" placeholder="输入或选择时长" oninput="handleDurationInput()">
+                <select id="durationSelect" onchange="handleDurationSelectChange()">
+                    <option value="">选择时长</option>
+                    <option value="5分钟">5分钟</option>
+                    <option value="10分钟">10分钟</option>
+                    <option value="15分钟">15分钟</option>
+                    <option value="20分钟">20分钟</option>
+                    <option value="25分钟">25分钟</option>
+                    <option value="30分钟">30分钟</option>
+                    <option value="35分钟">35分钟</option>
+                    <option value="40分钟">40分钟</option>
+                    <option value="45分钟">45分钟</option>
+                    <option value="50分钟">50分钟</option>
+                    <option value="55分钟">55分钟</option>
+                    <option value="1h">1h</option>
+                    <option value="2h">2h</option>
+                    <option value="3h">3h</option>
+                    <option value="4h">4h</option>
+                    <option value="5h">5h</option>
+                    <option value="6h">6h</option>
+                    <option value="7h">7h</option>
+                    <option value="8h">8h</option>
+                    <option value="9h">9h</option>
+                    <option value="10h">10h</option>
+                </select>
+            </div>
+        </div>
+        <!-- 单号 -->
+        <div class="input-group">
+            <label>单号：</label>
+            <span class="hint">（这周接的第几单）</span>
+            <input type="text" id="orderId" placeholder="输入单号" oninput="validateNumberInput(this)" style="display:block; width:80%; max-width:300px; padding:8px; font-size:15px; border:1px solid #aaa; border-radius:6px; text-align:center; margin:0 auto;">
+        </div>
+        <!-- 总价 -->
+        <div class="input-group">
+            <label>总价：</label>
+            <input type="text" id="total" placeholder="输入金额" oninput="validateTotalInput(this)" style="display:block; width:80%; max-width:300px; padding:8px; font-size:15px; border:1px solid #aaa; border-radius:6px; text-align:center; margin:0 auto;">
+        </div>
+        <!-- 派单 -->
+        <div class="input-group">
+            <label>派单：</label>
+            <input type="text" id="dispatcher" placeholder="派单人" style="display:block; width:80%; max-width:300px; padding:8px; font-size:15px; border:1px solid #aaa; border-radius:6px; text-align:center; margin:0 auto;">
+        </div>
+        <div class="button-row">
+            <button onclick="calculate()">计算</button>
+            <button onclick="generateBill()">生成结单表</button>
+            <button class="copy-btn" id="copyBtn" onclick="copyBill()">复制结单表</button>
+        </div>
+        <div class="bill-table" id="billResult"></div>
+        <div class="main-result" id="mainResult">等待计算…</div>
+        <hr>
+        <div class="steps" id="steps"></div>
+    </div>
+    <script type="text/javascript">
+        // ==================== 时长相关 ====================
+        function handleDurationSelectChange() {
+            var select = document.getElementById("durationSelect");
+            var input = document.getElementById("durationInput");
+            if (select.value !== "") {
+                input.value = select.value;
+                select.selectedIndex = 0; // 恢复默认项
+            }
+        }
+        function handleDurationInput() {
+            document.getElementById("durationSelect").selectedIndex = 0;
+        }
+        function getDuration() {
+            return document.getElementById("durationInput").value.trim();
+        }
+        // ==================== 单子类型相关 ====================
+        function handleSelectChange() {
+            var select = document.getElementById("orderTypeSelect");
+            var input = document.getElementById("orderTypeInput");
+            if (select.value !== "") {
+                input.value = select.value;
+                select.selectedIndex = 0;
+            }
+        }
+        function handleCustomInput() {
+            document.getElementById("orderTypeSelect").selectedIndex = 0;
+        }
+        function getOrderType() {
+            return document.getElementById("orderTypeInput").value.trim();
+        }
+        // ==================== 工具函数 ====================
+        function trimStr(str) {
+            if (str === null || str === undefined) return "";
+            return String(str).replace(/^\s+|\s+$/g, "");
+        }
+        function formatMoney(val) {
+            return val.toFixed(2).replace(/\.?0+$/, '');
+        }
+        var currentBillText = "";
+        function validateNumberInput(input) {
+            var value = input.value;
+            var filtered = value.replace(/[^\d]/g, '');
+            if (filtered !== value) {
+                alert("单号只能输入数字！");
+                input.value = filtered;
+            }
+        }
+        function validateTotalInput(input) {
+            var value = input.value;
+            var filtered = value.replace(/[^\d.]/g, '');
+            if (filtered.indexOf('.') !== filtered.lastIndexOf('.')) {
+                var firstDot = filtered.indexOf('.');
+                filtered = filtered.substring(0, firstDot + 1) + filtered.substring(firstDot + 1).replace(/\./g, '');
+            }
+            if (filtered !== value) {
+                alert("总价只能输入数字和小数点！");
+                input.value = filtered;
+            }
+        }
+        function updateResults(total, teamCut, dispatchCut, income) {
+            document.getElementById("mainResult").innerHTML =
+                "总价：<b>" + formatMoney(total) + "</b> 元<br>" +
+                "团抽（10%）：<b>" + formatMoney(teamCut) + "</b> 元<br>" +
+                "派抽（10%）：<b>" + formatMoney(dispatchCut) + "</b> 元<br>" +
+                "到手（80%）：<b>" + formatMoney(income) + "</b> 元";
+            document.getElementById("steps").innerHTML =
+                "计算步骤：<br>" +
+                "团抽 = " + formatMoney(total) + " × 10% = " + formatMoney(teamCut) + "<br>" +
+                "派抽 = " + formatMoney(total) + " × 10% = " + formatMoney(dispatchCut) + "<br>" +
+                "到手 = " + formatMoney(total) + " × 80% = " + formatMoney(income);
+        }
+        function calculate() {
+            var total = parseFloat(document.getElementById("total").value);
+            if (isNaN(total) || total <= 0) {
+                alert("请输入大于0的有效数字！");
+                return;
+            }
+            var teamCut = total * 0.1;
+            var dispatchCut = total * 0.1;
+            var income = total * 0.8;
+            updateResults(total, teamCut, dispatchCut, income);
+        }
+        function generateBill() {
+            try {
+                var orderType = trimStr(getOrderType());
+                var duration = getDuration();
+                var orderIdInput = trimStr(document.getElementById("orderId").value);
+                var total = parseFloat(document.getElementById("total").value);
+                var dispatcher = trimStr(document.getElementById("dispatcher").value);
+                if (orderType === "") {
+                    alert("单子类型不能为空！");
+                    return;
+                }
+                if (dispatcher === "") dispatcher = "未填写";
+                if (isNaN(total) || total <= 0) {
+                    alert("请先输入有效的总价！");
+                    return;
+                }
+                var orderId = parseInt(orderIdInput, 10);
+                if (isNaN(orderId)) {
+                    alert("单号必须为数字！");
+                    return;
+                }
+                var teamCut = total * 0.1;
+                var dispatchCut = total * 0.1;
+                var income = total * 0.8;
+                updateResults(total, teamCut, dispatchCut, income);
+                var today = new Date();
+                var dateStr = (today.getMonth() + 1) + "." + today.getDate();
+                var displayType = orderType;
+                if (duration !== "") {
+                    displayType += duration;
+                }
+                var billHTML = '<div style="text-align:left !important;">';
+                billHTML += "—• тнє♡тιмєƨ♡ғʋтʋяє • —<br>";
+                billHTML += "南山月专属结单表<br>";
+                billHTML += "✨单子类型：" + displayType + "<br>";
+                billHTML += "✨单号：" + orderId + "<br>";
+                billHTML += "✨总价：" + formatMoney(total) + "<br>";
+                billHTML += "✨接单陪陪：小电<br>";
+                billHTML += "✨派单：" + dispatcher + "<br>";
+                billHTML += "✨团抽：" + formatMoney(total) + "×10%＝" + formatMoney(teamCut) + "<br>";
+                billHTML += "✨派抽：" + formatMoney(total) + "×10%＝" + formatMoney(dispatchCut) + "<br>";
+                billHTML += "✨陪得：" + formatMoney(total) + "×80%＝" + formatMoney(income) + "<br>";
+                billHTML += "✨结单日期：" + dateStr + "<br>";
+                billHTML += "ᵀᴴᴱ ᴮᴱˢᵀ ᴵˢ ᶠᴼᴿ ᵞᴼᵁ<br>";
+                billHTML += "—• тнє♡тιмєƨ♡ғʋтʋяє • —<br>";
+                billHTML += "</div>";
+                document.getElementById("billResult").innerHTML = billHTML;
+                currentBillText = billHTML.replace(/<div[^>]*>/gi, "").replace(/<\/div>/gi, "").replace(/<br>/gi, "\n");
+                document.getElementById("copyBtn").style.display = "inline-block";
+            } catch (e) {
+                alert("生成表格出错：" + e.message);
+            }
+        }
+        function copyBill() {
+            if (!currentBillText) {
+                alert("请先生成结单表！");
+                return;
+            }
+            try {
+                window.clipboardData.setData("Text", currentBillText);
+                alert("已复制到剪贴板！");
+            } catch (e) {
+                var textarea = document.createElement("textarea");
+                textarea.value = currentBillText;
+                textarea.style.position = "fixed";
+                textarea.style.opacity = "0";
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand("copy");
+                document.body.removeChild(textarea);
+                alert("已复制到剪贴板！");
+            }
+        }
+        // 窗口初始化
+        window.onload = function() {
+            var initWidth = 700;
+            var initHeight = 700;
+            var left = (screen.availWidth - initWidth) / 2;
+            var top = (screen.availHeight - initHeight) / 2;
+            window.moveTo(left, top);
+            window.resizeTo(initWidth, initHeight);
+            document.getElementById("orderTypeInput").focus();
+        };
+    </script>
+</body>
+</html>
+
